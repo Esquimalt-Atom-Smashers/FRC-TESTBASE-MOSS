@@ -6,8 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.SampleMotorSubsystem;
+import frc.RobotContainer;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -15,15 +16,15 @@ import frc.robot.subsystems.SampleMotorSubsystem;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  private SampleMotorSubsystem sampleMotorSubsystem;
-  private XboxController gamepad;
+  private Command m_autonomousCommand;
+
+  private final RobotContainer m_robotContainer;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   public Robot() {
-    gamepad = new XboxController(2);
-    sampleMotorSubsystem = new SampleMotorSubsystem(() -> gamepad.getRightY());
+    m_robotContainer = new RobotContainer();
   }
 
   /**
