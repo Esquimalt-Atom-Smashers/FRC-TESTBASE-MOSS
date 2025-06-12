@@ -31,16 +31,16 @@ public class SampleMotorSubsystem extends SubsystemBase {
 
     private static final double FIRST_POS = 0;
     private static final double SECOND_POS = 200;
-    private static final double INTAKE_VOLTAGE = 10;
-
+    private static final double INTAKE_VOLTAGE = 0.5;
+{}
     private Timer timer = new Timer();
 
 
     public SampleMotorSubsystem() {
         //this.powerSupplier = powerSupplier;
-        motorConfig.smartCurrentLimit(1,3,200);
+        motorConfig.smartCurrentLimit(1,3,5);
         motorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(0.1).i(0.000).d(0.01).maxOutput(0.3).minOutput(-0.2);
+        .p(0.00001).i(0.000).d(0.000001).maxOutput(0.3).minOutput(-0.2);
 
         motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         motorController.setReference(FIRST_POS, SparkMax.ControlType.kPosition);  
@@ -70,10 +70,11 @@ public class SampleMotorSubsystem extends SubsystemBase {
         return Commands.runOnce(() -> {intake();}, this)
         .andThen(Commands.waitUntil(() -> {//wait for motor to spin up
             System.out.println("Intake Velocity = "+ motor.getEncoder().getVelocity());
-            return motor.getEncoder().getVelocity()<=-20;}))
+            return motor.getEncoder().getVelocity()>=200;}))
         .andThen(Commands.waitUntil(() -> {//wiat for the algae ball to stop the motor
-            if (motor.getEncoder().getVelocity()>=-2){
+            if (motor.getEncoder().getVelocity()<=100){
             stop();
+            System.out.println("I am stopped!!!");
             return true;
             } else {
             return false;
